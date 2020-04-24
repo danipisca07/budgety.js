@@ -33,14 +33,22 @@ var controller = (function(budgetCtrl, UICtrl) {
         //Mostra il budget
     }
 
-    //Aggiunta voce di budget
-    document.querySelector(UICtrl.DOMstrings.inputButton).addEventListener("click", ctrlAddItem);
+    var setupEventListeners = function() {
 
-    document.addEventListener("keypress", function(event){
-        if(event.keyCode === 13 || event.which === 13){ //Enter
-            ctrlAddItem();
+        document.querySelector(UICtrl.DOMstrings.inputButton).addEventListener("click", ctrlAddItem);
+
+        document.addEventListener("keypress", function(event){
+            if(event.keyCode === 13 || event.which === 13){ //Enter
+                ctrlAddItem();
+            }
+        });
+    }
+    
+    return {
+        init: function() {
+            setupEventListeners();
         }
-    });
-
-    return {}
+    }
 })(budgetController, UIController);
+
+controller.init();

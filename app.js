@@ -160,7 +160,7 @@ var UIController = (function() {
         //Sostituisco gli identificatori nel template sopra
         newHtml = html.replace('%id%', obj.id);
         newHtml = newHtml.replace('%description%', obj.description);
-        newHtml = newHtml.replace('%value%', obj.value);
+        newHtml = newHtml.replace('%value%', formatNumber(obj.value, type));
         
         //Inserisco il nuovo HTML come child dell'elemento
         document.querySelector(element).insertAdjacentHTML('beforeend', newHtml); 
@@ -174,9 +174,10 @@ var UIController = (function() {
     };
 
     var displayBudget = function(obj) {
-        document.querySelector(DOMstrings.budgetLabel).textContent = obj.budget;
-        document.querySelector(DOMstrings.incomeLabel).textContent = obj.totalInc;
-        document.querySelector(DOMstrings.expenseLabel).textContent = obj.totalExp;
+        var type = obj.budget > 0 ? 'inc' : 'exp';
+        document.querySelector(DOMstrings.budgetLabel).textContent = formatNumber(obj.budget, type);
+        document.querySelector(DOMstrings.incomeLabel).textContent = formatNumber(obj.totalInc, "inc");
+        document.querySelector(DOMstrings.expenseLabel).textContent = formatNumber(obj.totalExp, "exp");
         
         if(obj.percentage > 0){
             document.querySelector(DOMstrings.percentageLabel).textContent = obj.percentage+"%";
@@ -215,6 +216,20 @@ var UIController = (function() {
         fieldsArray[0].focus(); //Imposta il focus sul primo campo da ricompilare
     };
 
+    var formatNumber = function(num,type){
+        var numSplit, int, dec;
+        num = Math.abs(num); //Rimuove il segno (+ e - li aggiungo io in base a inc o exp)
+        num = num.toFixed(2); //Mantiene 2 decimali dopo la virgola !! MA RESTITUISCE UNA STRINGA
+        numSplit = num.split('.'); //Separo la parte intera dalla parte decimale
+        int = numSplit[0];
+        if(int.length>3){
+            int = int.substr(0, int.length-3)+","+int.substr(int.length-3,3); //Aggiungo la , delle migliaia dopo 3 cifre
+        }
+        dec = numSplit[1];
+
+        return (type === 'exp' ? '-' : '+') + ' ' + int + '.' + dec;
+    }
+
 
     return {
         getInput: function(){
@@ -230,7 +245,7 @@ var UIController = (function() {
         addListItem: addListItem,
         deleteListItem: deleteListItem,  
         displayBudget: displayBudget, 
-        displayPercentages: displayPercentages,     
+        displayPercentages: displayPercentages,
     }
 })();
 

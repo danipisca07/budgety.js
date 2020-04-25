@@ -134,6 +134,7 @@ var UIController = (function() {
         expenseLabel: ".budget__expenses--value",
         percentageLabel: ".budget__expenses--percentage",
         container: ".container",
+        expensesPercLabel: ".item__percentage",
     }
 
     var addListItem = function(obj, type) {
@@ -184,6 +185,26 @@ var UIController = (function() {
         }
     };
 
+    var displayPercentages = function (percentages){
+        var fields = document.querySelectorAll(DOMstrings.expensesPercLabel); //Ottengo tutte le label delle percentuali che devo aggiornare
+        
+        //querySelectorAll mi restituisce un NodeArray (non un array) quindi il foreach me lo costruisco
+        var nodeListForEach = function(list, callback){ 
+            for(var i = 0; i<list.length; i++){
+                callback(list[i], i); //per ogni elemento chiamo la funzione di callback passandogli i parametri conformemente a quello che succede con il foeach
+            }
+        };
+
+        nodeListForEach(fields, function(current,index){ //Ora uso la funzione foreach che ho appena creato
+            if(percentages[index] > 0){
+                current.textContent = percentages[index]+"%";
+            } else {
+                current.textContent = "---";
+            }
+        });
+        
+    }
+
     var clearFields = function() {
         var fields, fieldsArray;
         fields = document.querySelectorAll(DOMstrings.inputDescription + ", "+ DOMstrings.inputValue);
@@ -208,7 +229,8 @@ var UIController = (function() {
         clearFields: clearFields,
         addListItem: addListItem,
         deleteListItem: deleteListItem,  
-        displayBudget: displayBudget,      
+        displayBudget: displayBudget, 
+        displayPercentages: displayPercentages,     
     }
 })();
 

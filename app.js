@@ -91,7 +91,16 @@ var UIController = (function() {
             
             //Inserisco il nuovo HTML come child dell'elemento
             document.querySelector(element).insertAdjacentHTML('beforeend', newHtml); 
-        }
+        },
+        clearFields: function() {
+            var fields, fieldsArray;
+            fields = document.querySelectorAll(DOMstrings.inputDescription + ", "+ DOMstrings.inputValue);
+            fieldsArray = Array.prototype.slice.call(fields); //Converte da stringa a array
+            fieldsArray.forEach(function (currentEl, index, readOnlyArray){ //Cicla sull'array
+                currentEl.value = ""; //Pulisce il campo
+            });
+            fieldsArray[0].focus(); //Imposta il focus sul primo campo da ricompilare
+        },
     }
 })();
 
@@ -102,6 +111,7 @@ var controller = (function(budgetCtrl, UICtrl) {
         input = UICtrl.getInput(); //Ottieni input
         newItem = budgetCtrl.addItem(input.type, input.description, input.value); //Aggiungi al budget controller
         UIController.addListItem(newItem,input.type); //Aggiungi alla UI
+        UIController.clearFields(); //Pulisce gli input
         //Calcola budget
         //Mostra il budget
     }

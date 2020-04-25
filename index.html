@@ -50,6 +50,11 @@
                 </div>
             </div>
             
+            <!-- Event delegation e bubbling: quando un evento viene lanciato da un oggetto in realtà risale il dom
+            fino all'elemento root, quindi posso mettere il listener anche su un parent (anziche sull'elemento specifico)
+            e quindi intercettare l'evento li. Ad ogni modo il parametro target che viene passato all'handler dell'evento
+            rimanane sempre l'oggetto originale da cui l'evento era partito. Ad esempio in questo caso attaccherò l'handler
+            a container per gestire gli eventi lanciati dai figli (quindi un qualsiasi elemento delle due liste)-->
             <div class="container clearfix">
                 <div class="income">
                     <h2 class="icome__title">Income</h2>

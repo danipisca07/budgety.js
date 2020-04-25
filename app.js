@@ -85,6 +85,7 @@ var UIController = (function() {
         incomeLabel: ".budget__income--value",
         expenseLabel: ".budget__expenses--value",
         percentageLabel: ".budget__expenses--percentage",
+        container: ".container",
     }
 
     var addListItem = function(obj, type) {
@@ -93,7 +94,7 @@ var UIController = (function() {
         //Template html da inserire
         if(type === 'inc'){
             element = DOMstrings.incomeContainer;
-            html = `<div class="item clearfix" id="income-%id%">
+            html = `<div class="item clearfix" id="inc-%id%">
                 <div class="item__description">%description%</div>
                 <div class="right clearfix"><div class="item__value">%value%</div>
                 <div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i>
@@ -101,7 +102,7 @@ var UIController = (function() {
         }
         else if(type === 'exp'){
             element = DOMstrings.expenseContainer;
-            html = `<div class="item clearfix" id="expense-%id%"><div class="item__description">%description%</div>
+            html = `<div class="item clearfix" id="exp-%id%"><div class="item__description">%description%</div>
                 <div class="right clearfix"><div class="item__value">%value%</div>
                 <div class="item__percentage">21%</div><div class="item__delete">
                 <button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>`;
@@ -168,6 +169,19 @@ var controller = (function(budgetCtrl, UICtrl) {
         }
     }
 
+    var ctrlDeleteItem = function(event) {
+        var itemID, type, ID;
+        itemID = event.target.parentNode.parentNode.parentNode.parentNode.id; //DOM traversing (clicco su bottone ma voglio selezionare tutto il div)
+        if(itemID){
+            splitID = itemID.split('-'); //dalla stringa inc-<id> o exp-<id> estraggo le due componenti type e id
+            type= splitID[0];
+            ID = splitID[1];
+
+            //Elimina oggetto dalla struttura dati
+            //Elimina oggetto dalla UI
+            //Aggiorna e mostra budget
+        }
+    };
     
     var updateBudget = function () {
         var budget;
@@ -178,13 +192,17 @@ var controller = (function(budgetCtrl, UICtrl) {
 
     var setupEventListeners = function() {
 
-        document.querySelector(UICtrl.getDOMstrings().inputButton).addEventListener("click", ctrlAddItem);
+        var DOMstrings = UICtrl.getDOMstrings();
+        document.querySelector(DOMstrings.inputButton).addEventListener("click", ctrlAddItem);
 
         document.addEventListener("keypress", function(event){
             if(event.keyCode === 13 || event.which === 13){ //Enter
                 ctrlAddItem();
             }
         });
+
+        //Aggiungo l'evento su un container anche se l'evento click partirà da un elemento che è un suo figlio / nipote
+        document.querySelector(DOMstrings.container).addEventListener("click", ctrlDeleteItem); 
     }
     
     return {

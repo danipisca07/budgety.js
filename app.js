@@ -187,15 +187,15 @@ var UIController = (function() {
         }
     };
 
+    //querySelectorAll mi restituisce un NodeArray (non un array) quindi il foreach me lo costruisco
+    var nodeListForEach = function(list, callback){ 
+        for(var i = 0; i<list.length; i++){
+            callback(list[i], i); //per ogni elemento chiamo la funzione di callback passandogli i parametri conformemente a quello che succede con il foeach
+        }
+    };
+
     var displayPercentages = function (percentages){
         var fields = document.querySelectorAll(DOMstrings.expensesPercLabel); //Ottengo tutte le label delle percentuali che devo aggiornare
-        
-        //querySelectorAll mi restituisce un NodeArray (non un array) quindi il foreach me lo costruisco
-        var nodeListForEach = function(list, callback){ 
-            for(var i = 0; i<list.length; i++){
-                callback(list[i], i); //per ogni elemento chiamo la funzione di callback passandogli i parametri conformemente a quello che succede con il foeach
-            }
-        };
 
         nodeListForEach(fields, function(current,index){ //Ora uso la funzione foreach che ho appena creato
             if(percentages[index] > 0){
@@ -242,6 +242,16 @@ var UIController = (function() {
         return (type === 'exp' ? '-' : '+') + ' ' + int + '.' + dec;
     }
 
+    var changedType = function(){
+        var fields = document.querySelectorAll( //Recupero tutti gli elementi per i quali devo cambiare la classe
+            DOMstrings.inputType + "," +
+            DOMstrings.inputDescription + ","+
+            DOMstrings.inputValue);
+        nodeListForEach(fields, function(cur) {
+            cur.classList.toggle('red-focus'); //Aggiunge la classe CSS se non c'è e la rimuove se c'è
+        });
+    };
+
 
     return {
         getInput: function(){
@@ -259,6 +269,7 @@ var UIController = (function() {
         displayBudget: displayBudget, 
         displayPercentages: displayPercentages,
         displayMonth: displayMonth,
+        changedType: changedType,
     }
 })();
 
@@ -311,6 +322,8 @@ var controller = (function(budgetCtrl, UICtrl) {
 
         //Aggiungo l'evento su un container anche se l'evento click partirà da un elemento che è un suo figlio / nipote
         document.querySelector(DOMstrings.container).addEventListener("click", ctrlDeleteItem); 
+
+        document.querySelector(DOM.inputType). addEventListenerListener('change', UICtrl.changedType);
     }
 
     var updatePercentages = function() {

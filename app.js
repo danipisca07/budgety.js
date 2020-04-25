@@ -136,8 +136,11 @@ var UIController = (function() {
         document.querySelector(element).insertAdjacentHTML('beforeend', newHtml); 
     };
 
-    var deleteListItem = function() {
-
+    var deleteListItem = function(selectorID) { //selectorID = ID nell'html dell'oggetto da eliminare
+        var parent, element;
+        element = document.getElementById(selectorID);
+        parent = element.parentNode;
+        parent.removeChild(element); //Per rimuovere un elemento devo eliminarlo cavandolo dai figli del nodo padre
     };
 
     var displayBudget = function(obj) {

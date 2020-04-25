@@ -55,7 +55,7 @@ var budgetController = (function() {
 
         index = ids.indexOf(id); //restituisce -1 se non trova l'elemento cercato
 
-        if(index != -1)
+        if(index !== -1)
         {
             data.allItems[type].splice(index,1); //Elimina gli elementi che partono dall'indice index e ne elimina 1 (numero del secondo param)
         }
@@ -135,6 +135,11 @@ var UIController = (function() {
         //Inserisco il nuovo HTML come child dell'elemento
         document.querySelector(element).insertAdjacentHTML('beforeend', newHtml); 
     };
+
+    var deleteListItem = function() {
+
+    };
+
     var displayBudget = function(obj) {
         document.querySelector(DOMstrings.budgetLabel).textContent = obj.budget;
         document.querySelector(DOMstrings.incomeLabel).textContent = obj.totalInc;
@@ -169,7 +174,8 @@ var UIController = (function() {
         },
         getDOMstrings: function() { return DOMstrings },
         clearFields: clearFields,
-        addListItem: addListItem,  
+        addListItem: addListItem,
+        deleteListItem: deleteListItem,  
         displayBudget: displayBudget,      
     }
 })();
@@ -193,9 +199,9 @@ var controller = (function(budgetCtrl, UICtrl) {
         if(itemID){
             splitID = itemID.split('-'); //dalla stringa inc-<id> o exp-<id> estraggo le due componenti type e id
             type= splitID[0];
-            ID = splitID[1];
+            ID = parseInt(splitID[1]);
 
-            //Elimina oggetto dalla struttura dati
+            budgetCtrl.deleteItem(type, id); //Elimina oggetto dalla struttura dati
             //Elimina oggetto dalla UI
             //Aggiorna e mostra budget
         }

@@ -86,7 +86,24 @@ var budgetController = (function() {
         calculateTotal("inc");
         
         data.budget = data.totals.inc - data.totals.exp; //Calcola budget (entrate-uscite)
-        data.percentage = data.totals.inc / data.totals.exp; //Calcola percentuale delle spese
+        if(data.totals.inc > 0){
+            data.percentage = Math.floor((data.totals.inc / data.totals.exp)*100); //Calcola percentuale delle spese
+        } else {
+            data.percentage = -1;
+        }
+    }
+
+    var calculatePercentages = function() {
+        data.allItems.exp.forEach(function(current) {
+            current.calcPercentage(data.totals.inc);
+        });
+    }
+
+    var getPercentages = function(){
+        var allPerc = data.allItems.exp.map(function (cur) {
+            return cur.getPercentage();
+        });
+        return allPerc;
     }
 
     return {
@@ -98,7 +115,9 @@ var budgetController = (function() {
             totalInc: data.totals.inc,
             totalExp: data.totals.exp,
             percentage: data.percentage
-        }}
+        }},
+        calculatePercentages: calculatePercentages,
+        getPercentages: getPercentages,
     }
 })();
 
@@ -195,6 +214,12 @@ var UIController = (function() {
 
 var controller = (function(budgetCtrl, UICtrl) {
 
+    var updatePercentages = function() {
+        //Calcola percentuali
+        //Leggi percentuali dal budgetController 
+        //Aggiorna UI
+    }
+
     var ctrlAddItem = function() {
         var input, newItem;
         input = UICtrl.getInput(); //Ottieni input
@@ -203,6 +228,7 @@ var controller = (function(budgetCtrl, UICtrl) {
             UIController.addListItem(newItem,input.type); //Aggiungi alla UI
             UIController.clearFields(); //Pulisce gli input
             updateBudget();
+            updatePercentages();
         }
     }
 
@@ -217,6 +243,7 @@ var controller = (function(budgetCtrl, UICtrl) {
             budgetCtrl.deleteItem(type, id); //Elimina oggetto dalla struttura dati
             UICtrl.deleteListItem(itemID);//Elimina l'intero div parent dalla UI
             updateBudget();//Aggiorna e mostra budget
+            updatePercentages();
         }
     };
     
@@ -240,6 +267,12 @@ var controller = (function(budgetCtrl, UICtrl) {
 
         //Aggiungo l'evento su un container anche se l'evento click partirà da un elemento che è un suo figlio / nipote
         document.querySelector(DOMstrings.container).addEventListener("click", ctrlDeleteItem); 
+    }
+
+    var updatePercentages = function() {
+        budgetCtrl.calculatePercentages; //calcola le percentuali
+        var percentages = budgetCtrl.getPercentages(); //Ottiene le percentuali dal budget controller
+        //Aggiorna le percentuali sulla UI
     }
     
     return {

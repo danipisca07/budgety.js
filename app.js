@@ -205,8 +205,8 @@ var controller = (function(budgetCtrl, UICtrl) {
             ID = parseInt(splitID[1]);
 
             budgetCtrl.deleteItem(type, id); //Elimina oggetto dalla struttura dati
-            //Elimina oggetto dalla UI
-            //Aggiorna e mostra budget
+            UICtrl.deleteListItem(itemID);//Elimina l'intero div parent dalla UI
+            updateBudget();//Aggiorna e mostra budget
         }
     };
     

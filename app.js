@@ -44,6 +44,24 @@ var budgetController = (function() {
         return newItem;
     };
 
+    var deleteItem = function(type, id){
+        var ids, index;
+
+        //Map funziona similmente al foreach ma per ogni elemento restituisco un elemento che voglio faccia parte dell'
+        // array che la funzione map costruisce e restituisce
+        ids = data.allItems[type].map(function (current){
+            return current.id;
+        });
+
+        index = ids.indexOf(id); //restituisce -1 se non trova l'elemento cercato
+
+        if(index != -1)
+        {
+            data.allItems[type].splice(index,1); //Elimina gli elementi che partono dall'indice index e ne elimina 1 (numero del secondo param)
+        }
+        
+    };
+
     var calculateTotal = function(type) {
         var sum = 0;
         data.allItems[type].forEach(function(el){ //Cicla un tipo di spese e ne calcola la somma
@@ -63,6 +81,7 @@ var budgetController = (function() {
 
     return {
         addItem: addItem,
+        deleteItem: deleteItem,
         calculateBudget: calculateBudget,
         getBudget: function() { return {
             budget: data.budget,
@@ -116,7 +135,6 @@ var UIController = (function() {
         //Inserisco il nuovo HTML come child dell'elemento
         document.querySelector(element).insertAdjacentHTML('beforeend', newHtml); 
     };
-
     var displayBudget = function(obj) {
         document.querySelector(DOMstrings.budgetLabel).textContent = obj.budget;
         document.querySelector(DOMstrings.incomeLabel).textContent = obj.totalInc;
@@ -215,6 +233,7 @@ var controller = (function(budgetCtrl, UICtrl) {
                 percentage: -1});
         },
         ctrlAddItem: ctrlAddItem,
+        ctrlDeleteItem: ctrlDeleteItem,
         updateBudget: updateBudget,
     }
 })(budgetController, UIController);

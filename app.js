@@ -135,6 +135,7 @@ var UIController = (function() {
         percentageLabel: ".budget__expenses--percentage",
         container: ".container",
         expensesPercLabel: ".item__percentage",
+        dateLabel: ".budget__title--month",
     }
 
     var addListItem = function(obj, type) {
@@ -206,6 +207,17 @@ var UIController = (function() {
         
     }
 
+    var displayMonth = function(){
+        var now, year, month, months;
+        now = new Date(); //Ottenere data attuale
+        // var christmas = new Date(2020, 11, 25); //Ottenere una data specifica
+
+        year = now.getFullYear(); // Restituisce anno, es. 2020
+        month = now.getMonth(); //Restituisce mese in numero es. 4 (= aprile)
+        months = ['Gen', 'Feb', 'Mar', 'Apr', 'Mag', 'Giu', 'Lug', 'Ago', 'Set', 'Ott', 'Nov', 'Dic'];
+        document.querySelector(DOMstrings.dateLabel).textContent = months[month] + " " + year;
+    };
+
     var clearFields = function() {
         var fields, fieldsArray;
         fields = document.querySelectorAll(DOMstrings.inputDescription + ", "+ DOMstrings.inputValue);
@@ -246,6 +258,7 @@ var UIController = (function() {
         deleteListItem: deleteListItem,  
         displayBudget: displayBudget, 
         displayPercentages: displayPercentages,
+        displayMonth: displayMonth,
     }
 })();
 
@@ -314,6 +327,7 @@ var controller = (function(budgetCtrl, UICtrl) {
                 totalInc: 0,
                 totalExp: 0,
                 percentage: -1});
+            UICtrl.displayMonth();
         },
         ctrlAddItem: ctrlAddItem,
         ctrlDeleteItem: ctrlDeleteItem,
